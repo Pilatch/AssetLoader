@@ -1,0 +1,14 @@
+{
+  "version": "0.9.0",
+  "description": "Potent mechanism for deferring web page dependency requests",
+  "devDependencies": {
+    "jsdoc": "~3.3.0-alpha5",
+    "jade": "~1.9.2",
+    "jade-static": "~1.1.1",
+    "express": "~4.11.2",
+    "nodemon": "~1.3.7",
+    "ink-docstrap": "git+https://github.com/Pilatch/docstrap.git"
+  },
+  "author": "Ethan B Martin",
+  "license": "MIT"
+}

@@ -1,0 +1,668 @@
+#!/bin/bash
+
+################
+##  Settings  ##
+################
+
+outDir='../dist' # (required)
+ # Output directory for minified assets and markup files
+markupHeader='<!--built with mink - see /builds-->' # (optional)
+ # Goes atop each markup file Mink outputs.
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><markupHeader>...</markupHeader></markupOptions> in a build file.
+ # markupHeader may be complex and difficult to write in a shell script.
+ # Instead you can store its value in a file named markupHeader, in this directory.
+shortenOutputFileNames='1' # (optional)
+ # Whether to use shorter output file names instead of the longer, old ant-min-cat style.
+ # (1 = short; 0 or blank = long)
+externalServer='' # (optional)
+ # Prepended to each asset's path.
+ # If you want to wrap that path instead, also use externalServerPathVar.
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><externalServer>...</externalServer></markupOptions> in a build file.
+ # externalServer may be complex and difficult to write in a shell script.
+ # Instead you can store its value in a file named externalServer, in this directory.
+externalServerPathVar='' # (optional)
+ # A string specified here that's present in the externalServer string will be replaced by each asset's path.
+ # externalServerPathVar may be complex and difficult to write in a shell script.
+ # Instead you can store its value in a file named externalServerPathVar, in this directory.
+projectRoot='..' # (required)
+ # Relative to this folder.
+ # This points to the deepest folder in your project that is visible to external requests.
+ # When specifying asset paths in your xml build files, they are relative to the projectRoot.
+ # Do not begin them with a slash character. That would make them relative to the webAppRoot.
+webAppRoot='..' # (required)
+ # Relative to this folder.
+ # This points to the deepest folder your web application will look for content in.
+ # It's not necessarily visible to external requests.
+ # Asset paths starting with a slash character are considered relative to the webAppRoot.
+ # Depending on your platform, those assets might only be visible through a web alias.
+webAppRootDirName='al' # (required)
+ # Your web application looks for assets starting in a folder by this name.
+ # Needed for error checking and path manipulation.
+platform='' # (optional)
+ # Makes Mink aware of web aliases for a given platform
+ # E.g. (web path) /common/checkout -> /gsi/global/common/checkout (internal path in v9)
+ # Set this variable to a blank string to not use web aliases.
+ # Valid values: 'v9', ''
+cacheBuster='queryParamBase64Md5' # (optional)
+ # How the cache buster is applied to the output.
+ # Note: Some static content servers may not cache resources requested with query parameters!
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><cacheBuster>...</cacheBuster></markupOptions> in a build file.
+ # Valid values:
+ #   'inFileNameBase64Md5': 22 char url-safe base 64 translation of compressed content's MD5 digest in its file name
+ #   'inFileNameMd5': 32 char hexadecimal MD5 digest of compressed content in its file name
+ #   'queryParamBase64Md5': 22 char url-safe base 64 translation of compressed content's MD5 digest in markup as query parameter "d"
+ #   'queryParamMd5': 32 char hexadecimal MD5 digest of the compressed content in markup as query parameter "d"
+ #   '': No cache buster
+markupFileExtension='html' # (required)
+ # The file extension that is put at the end of each markup file Mink outputs
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><markupFileExtension>...</markupFileExtension></markupOptions> in a build file.
+assetsWrapStart='' # (optional)
+ # What goes before all the assets' HTML tags that Mink outputs.
+ # If used, must be used with assetsWrapEnd.
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><assetsWrapStart>...</assetsWrapStart></markupOptions> in a build file.
+ # assetsWrapStart may be complex and difficult to write in a shell script.
+ # Instead you can store its value in a file named assetsWrapStart, in this directory.
+assetsWrapEnd='' # (optional)
+ # What goes after all the assets' HTML tags that Mink outputs.
+ # If used, must be used with assetsWrapStart.
+ # Can be overridden on a by-module, by-asset basis.
+ # To override, use <markupOptions><assetsWrapEnd>...</assetsWrapEnd></markupOptions> in a build file.
+ # assetsWrapEnd may be complex and difficult to write in a shell script.
+ # Instead you can store its value in a file named assetsWrapEnd, in this directory.
+jsCompressor='uglifier' # (optional)
+ # What JavaScript compressor to use for minification.
+ # Valid values:
+ #   'uglifier': Strips out more curly braces.
+ #   'yui2.4.8': Good ol' YUI compressor, version 2.4.8.
+ #   '': Default to whatever Mink uses as the tried-and-true.
+minkServiceBase='http://mink.tools.us.gspt.net' # (required)
+ # The base URL for the Mink web service.
+ # Only modify this if you know some other Mink service host you would rather use.
+
+#########################################
+##  Don't mess with stuff below here.  ##
+#########################################
+
+minkShellScriptVersion='0.88.a'
+topLevelPid=$$ #necessary for exiting out of functions
+mode='min'
+base64VarNames='markupHeader externalServer externalServerPathVar assetsWrapStart assetsWrapEnd'
+debugOn='' #set to any non-blank string to turn on debugging
+cd $(dirname ${BASH_SOURCE[0]} ) #only move to script's directory when not in dev mode
+
+debug() {
+	if [[ $debugOn ]]
+	then
+		echo "$@" >&2
+	fi
+}
+
+debug "args: $@"
+
+while [[ $1 ]]
+do
+	if [[ $1 =~ ^- ]] #it's an option
+	then
+		if [[ $1 =~ ^-*-[hdub] ]] #it's an option not followed by an argument
+		then
+			if [[ $1 =~ ^-*-h ]]
+			then
+				mode='help'
+				break
+			elif [[ $1 =~ ^-*-d ]]
+			then
+				mode='dev'
+			elif [[ $1 =~ ^-*-u ]]
+			then
+				mode='update'
+			elif [[ $1 =~ ^-*-b ]]
+			then
+				mode='builtModulesList'
+			fi
+		else
+			echo "Unrecognized option $1" >&2
+			exit 1
+		fi
+	else #it's an xml file name
+		if [ -z "$xmlFileList" ]
+		then
+			xmlFileList=$1
+		else
+			xmlFileList="$xmlFileList $1"
+		fi
+	fi
+	shift
+done
+
+startingDir=$PWD
+
+if [[ $mode == 'builtModulesList' ]]
+then
+	curlCmd="curl -s -X POST \
+	-F platform=$platform \
+	-F buildsDir=$startingDir \
+	-F shellScriptVersion=$minkShellScriptVersion"
+	if [[ $xmlFileList ]]
+	then
+		for xmlFile in $xmlFileList
+		do
+			curlCmd="$curlCmd \
+			-F xmlFileName[]=$xmlFile"
+		done
+	fi
+	curlCmd="$curlCmd \
+	$minkServiceBase/builtModulesList"
+	$curlCmd
+	exit $?
+fi
+
+if [[ ! $xmlFileList && $mode != 'update' && $mode != 'help' ]]
+then
+	echo "No xmlFile(s) specified :(" >&2
+	exit 1
+fi
+
+#run a quick test to see how base64 acts
+base64 --wrap=0 ${BASH_SOURCE[0]} 1>/dev/null 2>/dev/null
+#all the fuss because some versions of base64 need a nowrap param, others will choke on it
+if [[ $? != 0 ]]
+then
+	base64Command="base64"
+else #we may have a version of the base64 binary that needs to be specifically instructed not to wrap lines
+	base64Command="base64 --wrap=0"
+fi
+
+newSession() {
+	sessionId=$USER-$$-$(date +"%s.%N")
+}
+
+#pull the error code from the web service
+#returns false if no error message came back
+getError() {
+	[[ $1 ]] && echo "While processing $1:" >&2
+	curl -s "$minkServiceBase/error?sessionId=$sessionId" >&2
+	if [[ $? == 0 ]]
+	then
+		true
+	else
+		false
+	fi
+}
+
+pruneZeroLengthFiles() {
+	for f in $(ls)
+	do
+		if [ -a "$f" -a ! -s "$f" ]
+		then
+			debug "Deleting $(pwd)/$f"
+			rm $f
+		fi
+	done
+}
+
+cleanup() {
+	cd
+	rm -rf /tmp/$sessionId*
+	cd $startingDir #in case there are multiple xml files to send
+	newSession
+}
+
+fail() {
+	[[ $1 ]] && echo $* >&2
+	cleanup
+	kill -s INT $topLevelPid
+}
+
+getFilePermissions() {
+	declare fileName="$1"
+	declare result=$(stat -c '%a' "$fileName" 2>/dev/null)
+	if [[ $result ]]
+	then
+		echo $result
+	else
+		stat -f %p "$fileName"
+	fi
+}
+
+#get the contents of a directory as a double-quote escaped, comma separated list
+dirContentsBase64Encoded() {
+	if [ -z "$1" ]
+	then
+		dir="."
+	else
+		dir="$1"
+	fi
+	if [ -d "$dir" ]
+	then
+		oneColumnOfEscapedFileNames=$(ls -m $dir) #--quoting-style=c
+		commaSeparatedFileNames=$(echo $oneColumnOfEscapedFileNames | tr '\n' ',' | sed 's@,$@@')
+		echo $commaSeparatedFileNames | $base64Command
+	else
+		echo ""
+	fi
+}
+
+loadComplexVariablesFromFiles() {
+	for varName in $base64VarNames
+	do
+		varValue=${!varName}
+		[ -z "$varValue" -a -s "./$varName" ] && eval "$varName=\$(cat ./\$varName)"
+	done
+}
+
+base64EncodeVars() {
+	for varName in $base64VarNames
+	do
+		varValue=${!varName}
+		if [[ $varValue ]]
+		then
+			eval b64$varName=$(echo $varValue | $base64Command)
+		fi
+	done
+}
+
+makeUpdateCurlCommand() {
+	echo "curl -s POST \
+	-F outDir=$outDir \
+	-F projectRoot=$projectRoot \
+	-F platform=$platform \
+	-F webAppRoot=$webAppRoot \
+	-F webAppRootDirName=$webAppRootDirName \
+	-F markupHeader=$b64markupHeader \
+	-F markupFileExtension=$markupFileExtension \
+	-F minkServiceBase=$minkServiceBase \
+	-F externalServer=$b64externalServer \
+	-F externalServerPathVar=$b64externalServerPathVar \
+	-F assetsWrapStart=$b64assetsWrapStart \
+	-F assetsWrapEnd=$b64assetsWrapEnd \
+	-F jsCompressor=$jsCompressor \
+	-F shortenOutputFileNames=$shortenOutputFileNames \
+	-F cacheBuster=$cacheBuster \
+	$minkServiceBase/shell-script"
+}
+
+makeXmlCurlCommand() {
+	xmlFile="$1"; sessionId="$2"; mode="$3";
+	echo "curl -s -X POST \
+	-F xml=@$xmlFile \
+	-F sessionId=$sessionId \
+	-F mode=$mode \
+	-F pwd=$PWD \
+	-F projectRoot=$projectRoot \
+	-F webAppRoot=$webAppRoot \
+	-F webAppRootDirName=$webAppRootDirName \
+	-F platform=$platform \
+	-F markupHeader=$b64markupHeader \
+	-F markupFileExtension=$markupFileExtension \
+	-F externalServer=$b64externalServer \
+	-F externalServerPathVar=$b64externalServerPathVar \
+	-F assetsWrapStart=$b64assetsWrapStart \
+	-F assetsWrapEnd=$b64assetsWrapEnd \
+	-F shortenOutputFileNames=$shortenOutputFileNames \
+	-F shellScriptVersion=$minkShellScriptVersion \
+	-F buildsDir=$startingDir \
+	$minkServiceBase/xml"
+}
+
+isRemoteFile() {
+	declare sourceFile="$1";
+	if [[ $(echo $sourceFile | grep -E '^(\w+:)?//') ]]
+	then
+		true
+	else
+		false
+	fi
+}
+
+normalizeProtocol() {
+	declare sourceFile="$1";
+	[[ $(echo $sourceFile | grep -E '^//') ]] && sourceFile="http:$sourceFile"
+	echo $sourceFile
+}
+
+addSourceFilesParam() {
+	declare sourceFileList="$1";
+	declare sourceFilesParam=""
+	for sourceFile in $sourceFileList
+	do
+		if isRemoteFile $sourceFile
+		then #it's a remote file; without a protocol? prepend "http:"
+			sourceFile=$(normalizeProtocol "$sourceFile")
+			sourceFilesParam="$sourceFilesParam \
+			-F sourceFiles[]=$sourceFile"
+		else
+			[[ ! -e "$startingDir/$sourceFile" ]] && fail "Could not find local file $sourceFile :("
+			sourceFilesParam="$sourceFilesParam \
+			-F sourceFiles[]=@$startingDir/$sourceFile"
+		fi
+	done
+	echo $sourceFilesParam
+}
+
+makeCompressJsCssCurlCommand() {
+	declare sessionId="$1"; declare tagType="$2"; declare keepSessionAlive="$3"; declare xmlFileName="$4"; declare sourceFileList="$5";
+	declare curlCmd="curl -s -X POST"
+	curlCmd="$curlCmd \
+	$(addSourceFilesParam "$sourceFileList")"
+	curlCmd="$curlCmd \
+	-F xmlFileName=$xmlFileName \
+	-F platform=$platform
+	-F sessionId=$sessionId \
+	-F outDir=$outDir \
+	-F tagType=$tagType \
+	-F shortenOutputFileNames=$shortenOutputFileNames \
+	-F keepSessionAlive=$keepSessionAlive \
+	-F cacheBuster=$cacheBuster \
+	-F jsCompressor=$jsCompressor \
+	-F outDirContents=$(dirContentsBase64Encoded $outDir) \
+	-F buildsDir=$startingDir \
+	$minkServiceBase/compressJsCss"
+	echo $curlCmd
+}
+
+trySendingXml() {
+	curlCmd="$1"; payloadFileName="$2"; xmlFile="$3";
+	[ ! -e "$xmlFile" ] && fail "Could not find xml file named '$xmlFile'"
+	[ ! -s "$xmlFile" ] && fail "Xml file '$xmlFile' is empty"
+	$curlCmd > $payloadFileName
+	curlExitStatus=$?
+	if [[ $curlExitStatus != 0 ]]
+	then
+		debug $curlCmd
+		if [[ $curlExitStatus == 7 ]]
+		then
+			fail "Mink service at $minkServiceBase is not responding. Try again in a few minutes."
+		else
+			fail "Curl exit status $curlExitStatus. Trouble sending xml :("
+		fi
+	fi
+	[ ! -e "$payloadFileName" ] && fail "No payload file received. :("
+	if [ ! -s "$payloadFileName" ]
+	then
+		getError $xmlFile
+		fail
+	fi
+}
+
+makeTemporaryPayloadExtractionDir() {
+	declare dirNameSuffix="$1";
+	declare temporaryPayloadExtractionDirName="/tmp/$sessionId.payload$dirNameSuffix"
+	if [ -e "$temporaryPayloadExtractionDirName" ]
+	then
+		rm -rf "$temporaryPayloadExtractionDirName"
+	fi
+	mkdir $temporaryPayloadExtractionDirName
+	echo $temporaryPayloadExtractionDirName
+}
+
+deployOutputFilesFromPayload() {
+	declare payloadFileName="$1";
+	declare temporaryPayloadExtractionDirName=$(makeTemporaryPayloadExtractionDir ".OF")
+	cd $temporaryPayloadExtractionDirName
+	if [[ $(gunzip -t "$payloadFileName" 2>/dev/null) == 0 ]]
+	then
+		tar xfz $payloadFileName 2>/dev/null
+		declare tarExitStatus=$?
+	else
+		tar xf $payloadFileName 2> /dev/null
+		declare tarExitStatus=$?
+	fi
+	[[ $tarExitStatus != 0 ]] && fail "Problem deploying payload. :("
+	cd - >/dev/null
+	declare payloadOutputFilesDir="$temporaryPayloadExtractionDirName/outputFiles"
+	[ ! -d "$payloadOutputFilesDir" ] && fail "No files to output"
+	[ ! -e "$outDir" ] && mkdir $outDir
+	[ ! -d "$outDir" ] && fail "Expected $outDir to be a directory"
+	cd $outDir
+	mv $payloadOutputFilesDir/* .
+	[[ $mode == 'min' ]] && pruneZeroLengthFiles
+	cd - >/dev/null
+	echo $temporaryPayloadExtractionDirName
+}
+
+sendRequestedSourceFiles() {
+	declare tmpPayloadDir="$1"; declare xmlFile="$2";
+	declare htmlTagTypesOrder="img link script" #assets must be sent in this order because of self-depending modules
+	if [ -d "$tmpPayloadDir/requestedSourceFiles" ]
+	then
+		declare numAssetTypesRequested=$(ls $tmpPayloadDir/requestedSourceFiles | wc -w)
+		[[ $numAssetTypesRequested == "0" ]] && fail "Expected to send source files, but none were requested"
+		for tagType in $htmlTagTypesOrder
+		do
+			if [ -s "$tmpPayloadDir/requestedSourceFiles/$tagType" ]
+			then
+				declare tmpFilteredSourceFilesExtractionDir=$(makeTemporaryPayloadExtractionDir ".FS")
+				declare payloadFileName=$tmpFilteredSourceFilesExtractionDir/payload.tar.gz
+				declare curlCmd=$(makeWriteMinkRefsCurlCommand "$tagType" "$tmpPayloadDir/requestedSourceFiles/$tagType")
+				$curlCmd > $payloadFileName
+				declare curlExitStatus=$?
+				if [[ $curlExitStatus != 0 ]]
+				then
+					debug $curlCmd
+					fail "Curl exit status $curlExitStatus. Trouble sending requested source files :("
+				fi
+				if [ ! -s "$payloadFileName" ]
+				then
+					getError
+					fail
+					#TODO recursively run mink in the case where no built modules matched what was needed, maybe?
+				fi
+				writeFilteredSourceFilesFromPayload "$tmpFilteredSourceFilesExtractionDir" "$payloadFileName"
+			fi
+		done
+	fi
+}
+
+makeCompressImagesCurlCommand() {
+	declare sessionId="$1"; declare keepSessionAlive="$2"; declare xmlFile="$3"; declare sourceFileList="$4"
+	declare sourceFilesNotFound=''
+	declare curlCmd="curl -s -X POST \
+	-F sessionId=$sessionId \
+	-F keepSessionAlive=$keepSessionAlive \
+	-F outDir=$outDir \
+	-F tagType=img \
+	-F xmlFileName=$xmlFile \
+	-F shellScriptVersion=$minkShellScriptVersion \
+	-F platform=$platform \
+	-F cacheBuster=$cacheBuster \
+	-F outDirContents=$(dirContentsBase64Encoded $outDir) \
+	-F buildsDir=$startingDir "
+	for sourceFile in $sourceFileList
+	do
+		if [ ! -e "$sourceFile" ]
+		then
+			sourceFilesNotFound="$sourceFile $sourceFilesNotFound"
+		fi
+		curlCmd="$curlCmd \
+		-F sourceFiles[]=@$sourceFile "
+	done
+	[ -n "$sourceFilesNotFound" ] && fail "Could not find source file(s): $sourceFilesNotFound"
+	curlCmd="$curlCmd \
+	$minkServiceBase/compressImages"
+	echo "$curlCmd"
+}
+
+makeWriteMinkRefsCurlCommand() {
+	declare tagType="$1"; declare sourceFileListFile="$2";
+	declare sourceFilesNotFound=''
+	declare curlCmd="curl -s -X POST \
+	-F sessionId=$sessionId \
+	-F outDir=$outDir \
+	-F tagType=$tagType \
+	-F shellScriptVersion=$minkShellScriptVersion \
+	-F platform=$platform \
+	-F buildsDir=$startingDir "
+	while read sourceFile
+	do
+		if isRemoteFile "$sourceFile"
+		then
+			continue
+		elif [ ! -e "$sourceFile" ]
+		then
+			sourceFilesNotFound="$sourceFile $sourceFilesNotFound"
+		else #it's a local file that exists
+			curlCmd="$curlCmd \
+			-F sourceFiles[]=@$sourceFile \
+			-F sourceFilesRelativePaths[]=$sourceFile "
+		fi
+	done < $sourceFileListFile
+	[ -n "$sourceFilesNotFound" ] && fail "Could not find source file(s): $sourceFilesNotFound"
+	curlCmd="$curlCmd \
+	$minkServiceBase/writeMinkRefs"
+	echo "$curlCmd"
+}
+
+writeFilteredSourceFilesFromPayload() {
+	declare tmpFilteredSourceFilesExtractionDir="$1"; declare payloadFileName="$2"
+	cd $tmpFilteredSourceFilesExtractionDir
+	tar xfz $payloadFileName
+	cd - >/dev/null
+	declare filteredSourceFilesDir="filteredSourceFiles"
+	if [ -d "$tmpFilteredSourceFilesExtractionDir/$filteredSourceFilesDir" ]
+	then
+		cd $tmpFilteredSourceFilesExtractionDir/$filteredSourceFilesDir
+		declare manifestFile="manifest.list"
+		[ ! -s "$manifestFile" ] && fail "No manifest file sent for filtered source files :("
+		declare filteredSourceFileIndex="0"
+		while read relativePath
+		do
+			declare filteredSourceFile="$filteredSourceFileIndex"
+			[ ! -s "$filteredSourceFile" ] && fail "Expected to find a filtered source file numbered $filteredSourceFileIndex :("
+			[ -z "$relativePath" ] && fail "A relative path in the filtered source file manifest was blank :("
+			declare originalSourceFileFullPath="$startingDir/$relativePath"
+			[ ! -s "$originalSourceFileFullPath" ] && fail "Could not find source file to overwrite at $originalSourceFileFullPath :("
+			#mv $originalSourceFileFullPath $originalSourceFileFullPath.mink-bak #TODO enable this for some backup mode
+			mv $filteredSourceFile $originalSourceFileFullPath
+			filteredSourceFileIndex=$(expr $filteredSourceFileIndex + 1)
+		done < $manifestFile
+		cd - >/dev/null
+	fi
+}
+
+trap 'cleanup; exit 1;' INT
+
+if [[ $mode != 'update' ]]
+then
+	#if we're not updating, then look in files for the values of some of the more complex variables
+	loadComplexVariablesFromFiles
+fi
+
+if [[ $mode == 'help' ]]
+then
+	echo "Mink, a smarter min-cat, version $minkShellScriptVersion. Usage:
+./$(basename $0) [options] <xmlFile(s)>
+<xmlFile(s)> must be in the same directory as this script.
+options:
+-d, --dev                         Development mode. (Default is minify mode.)
+-b, --builtModulesList            List web paths of built modules.
+-u, --update                      Update this shell script to the latest version.
+-h, --help                        Show this message.
+"
+	exit 1
+fi
+
+#some options may have spaces, so we'll base64 encode them before sending,
+#as base64 has no spaces, and the binary should be present on any of our Linux boxes
+#well, you need the --wrap=0 flag to make sure it doesn't wrap with a CRLF
+base64EncodeVars
+newSession
+
+if [[ $mode == 'update' ]]
+then
+	tmpUpdatedShellScriptFileName=/tmp/$sessionId.updated-mink-shell-script
+	curlCmd=$(makeUpdateCurlCommand)
+	debug "curl command for update: $curlCmd"
+	$curlCmd > $tmpUpdatedShellScriptFileName
+	curlExitStatus=$?
+	if [[ $curlExitStatus != 0 ]]
+	then
+		fail "curl exit status $curlExitStatus. Trouble downloading new shell script. :("
+	elif [ -s "$tmpUpdatedShellScriptFileName" ]
+	then
+		minkShellScriptAccessRightsInOctal=$(getFilePermissions $(basename $0)) #remember the file permissions on here
+		mv $tmpUpdatedShellScriptFileName $(basename $0)
+		chmod $minkShellScriptAccessRightsInOctal $(basename $0)
+	else
+		fail "New shell script file did not download, or was empty. :("
+	fi
+	exit 0
+fi
+
+for xmlFile in $xmlFileList
+do
+	curlCmd=$(makeXmlCurlCommand "$xmlFile" "$sessionId" $mode)
+	debug "curl command for xml file: $curlCmd"
+
+	if [[ $mode == 'min' ]]
+	then
+		tmpSourceListsPayloadFileName="/tmp/$sessionId.mink-source-lists-payload.tar.gz"
+		trySendingXml "$curlCmd" $tmpSourceListsPayloadFileName $xmlFile
+		#the curl command should return a tarball full of text lists of filenames,
+		#that it will then want us to send in successive curls, below
+		#each file therein should be named for its file extension
+		#unload all the lists of source files to a temporary directory
+		tmpPayloadExtractionDir=$(makeTemporaryPayloadExtractionDir ".SL")
+		cd $tmpPayloadExtractionDir
+		tar xfz $tmpSourceListsPayloadFileName
+		tmpSourceListsDir="$tmpPayloadExtractionDir/requestedSourceFiles"
+		htmlTagTypes=$(ls $tmpSourceListsDir)
+		numAssetTypes=$(ls $tmpSourceListsDir | wc -w)
+		cd - >/dev/null
+		currentAssetNum=1
+
+		#go through all the source file lists, and send each in turn
+		#they are named for the types of tags they hold, such as "script" or "link"
+		for tagType in $htmlTagTypes
+		do
+			sourceFileList=$(cat $tmpSourceListsDir/$tagType)
+			if [[ $currentAssetNum == $numAssetTypes ]]
+			then
+				keepSessionAlive='false'
+			else
+				keepSessionAlive='true'
+			fi
+			currentAssetNum=$(expr $currentAssetNum + 1)
+			[ -z "$sourceFileList" ] && fail "No source files listed in $tagType :("
+			tmpCompressedPayloadFileName="/tmp/$sessionId.mink-compressed-payload.tar.gz"
+			if [[ $tagType == 'script' || $tagType == 'link' ]]
+			then
+				curlCmd=$(makeCompressJsCssCurlCommand "$sessionId" $tagType $keepSessionAlive "$xmlFile" "$sourceFileList")
+			elif [[ $tagType == 'img' ]]
+			then
+				curlCmd=$(makeCompressImagesCurlCommand "$sessionId" $keepSessionAlive "$xmlFile" "$sourceFileList")
+			else
+				fail "Unknown tagType '$tagType'"
+			fi
+			$curlCmd > $tmpCompressedPayloadFileName
+			curlExitStatus=$?
+			[ -e "$tmpFileCattedAssets" ] && rm $tmpFileCattedAssets
+			[[ $curlExitStatus != 0 ]] && fail "Curl exit status $curlExitStatus. Trouble getting minified assets :("
+			[ ! -e "$tmpCompressedPayloadFileName" ] && fail "No payload file found. :("
+			if [ ! -s "$tmpCompressedPayloadFileName" ]
+			then
+				rm $tmpCompressedPayloadFileName
+				getError $xmlFile || echo "Payload file had no data. :(" >&2
+				fail
+			fi
+			tmpPayloadDir=$(deployOutputFilesFromPayload $tmpCompressedPayloadFileName)
+		done
+
+	elif [[ $mode == 'dev' ]]
+	then
+		tmpDevPayloadFileName="/tmp/$sessionId.mink-dev-payload.tar.gz"
+		trySendingXml "$curlCmd" $tmpDevPayloadFileName $xmlFile
+		tmpPayloadDir=$(deployOutputFilesFromPayload $tmpDevPayloadFileName)
+		sendRequestedSourceFiles $tmpPayloadDir $xmlFile
+		cleanup
+	else
+		fail "Unknown mode $mode :("
+	fi
+
+	cleanup
+
+done

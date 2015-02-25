@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>AssetLoader Global</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.yeti.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">AssetLoader</a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="AssetLoader.html">AssetLoader</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html">Global</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-_jQuery_.html">jQuery</a></li><li><a href="external-document.html">document</a></li><li><a href="external-window.html">window</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+    		
+
+	<h1 class="page-title">Global</h1>
+<section>
+
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl>
+                
+<dt class="name" id="AssetIdPathMap">
+    <h4>AssetIdPathMap</h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A plain object that is a map of asset IDs to their respective web paths.
+Contains only one type of asset, whether stylesheets or images, etc.</p>
+    </div>
+    
+
+    
+        <h5>Type: 
+<span class="param-type">Object</span>
+
+</h5>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">{
+	&quot;overlay&quot;: &quot;/css/gray-overlay.css&quot;,
+	&quot;dialogBox&quot;: &quot;/css/schnazzy-dialog.css&quot;
+}</pre>
+
+
+    
+</dd>
+
+            
+                
+<dt class="name" id="AssetsObject">
+    <h4>AssetsObject</h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A plain object that could contain multiple <a href="global.html#AssetIdPathMap">AssetIdPathMap</a>s.
+Each key in the top level of an AssetsObject must be a <a href="global.html#SupportedAssetType">SupportedAssetType</a>.
+Each gets its own property to show what type of assets it references.</p>
+<p>When loading JavaScript, if more paths are added to the AssetsObject,
+the AssetLoader's done callback will not fire until those newly added assets are loaded too,
+and any new assets they add... and so on.</p>
+    </div>
+    
+
+    
+        <h5>Type: 
+<span class="param-type">Object</span>
+
+</h5>
+    
+
+    
+<dl class="details">
+	
+
+	<h5 class="subsection-title">Properties:</h5>
+
+	<dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>css</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#AssetIdPathMap">AssetIdPathMap</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>css assets to be loaded</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>js</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#AssetIdPathMap">AssetIdPathMap</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>javascript assets to be loaded</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>img</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#AssetIdPathMap">AssetIdPathMap</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>image assets to be loaded</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>hbs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#AssetIdPathMap">AssetIdPathMap</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Handlebars templates to be loaded</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">var assetsObj = {
+  css: {
+    &quot;foo&quot;: &quot;/path/to/foo.css&quot;
+  },
+  js: {
+    &quot;foo&quot;: &quot;/path/to/foo.js&quot;,
+    &quot;bar&quot;: &quot;/path/to/bar.js&quot;
+  }
+};</pre>
+
+        <p class="code-caption">Concatenated assets can have their constituent asset identifiers marked as loaded
+by <a href="AssetLoader.html#.hasLoaded">AssetLoader.hasLoaded</a> while pointing to only one path.
+Use the <code>|</code> pipe character to separate
+asset IDs in the key of an <a href="global.html#AssetIdPathMap">AssetIdPathMap</a>.</p>
+    
+    <pre class="sunlight-highlight-javascript">var assetsObj = {
+  css: {
+    &quot;foo|bar|baz&quot;: &quot;/min/foobarbaz.min.css&quot;
+  }
+};</pre>
+
+
+    
+</dd>
+
+            
+                
+<dt>
+    <h4 class="name" id="LoaderCallbackSetter">LoaderCallbackSetter(callback)</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>to be called when the given event occurs. Will be passed two String arguments: assetType, assetId.
+For error handlers, there could also be one or two additional parameters: path, errorMessage.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+    
+<h5>Returns: 
+<span class="param-type"><a href="global.html#LoaderPromise">LoaderPromise</a></span>
+
+</h5>
+    
+            <div class="param-desc">
+    		<p>The calling object for method chaining, so you can set different callbacks in one line of code.</p>
+	</div>
+
+        
+    
+    
+</dd>
+
+            
+                
+<dt class="name" id="LoaderPromise">
+    <h4>LoaderPromise</h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>A promise object that allows for assigning callbacks to loading events.
+Each of its functions returns the LoaderPromise, so you can chain method calls.</p>
+    </div>
+    
+
+    
+        <h5>Type: 
+<span class="param-type">Object</span>
+
+</h5>
+    
+
+    
+<dl class="details">
+	
+
+	<h5 class="subsection-title">Properties:</h5>
+
+	<dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>done</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#LoaderCallbackSetter">LoaderCallbackSetter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>register a callback to be fired after the loader has loaded all desired assets.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>each</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#LoaderCallbackSetter">LoaderCallbackSetter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>register a callback for the loader to fire after each asset it loads.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#LoaderCallbackSetter">LoaderCallbackSetter</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>register an error handler to be called when the loader encounters an error loading an asset.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">var promise = AssetLoader.load(&quot;/css/flowers.css&quot;, &quot;/js/flowers-petals.js&quot;);
+promise.each(singleAssetLoadedHandler).done(flowersLoadedCallback).error(errHandler);</pre>
+
+
+    
+</dd>
+
+            
+                
+<dt class="name" id="SupportedAssetType">
+    <h4>SupportedAssetType</h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>One of the following:
+<code>'css'</code>, <code>'hbs'</code>, <code>'img'</code>, <code>'js'</code></p>
+    </div>
+    
+
+    
+        <h5>Type: 
+<span class="param-type">String</span>
+
+</h5>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+            </dl>
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2014 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a>
+	on Wed Feb 25th 2015 using the <a
+	href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+</body>
+</html>

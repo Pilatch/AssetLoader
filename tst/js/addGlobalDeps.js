@@ -1,0 +1,1 @@
+GLOBAL_DEPENDENCIES.css.purpleDogGenderBorder = "/tst/css/purpleDogGenderBorder.css";

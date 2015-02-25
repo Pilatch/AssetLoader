@@ -1,0 +1,31 @@
+{
+  "name": "asset-loader",
+  "version": "0.9.0",
+  "description": "Potent mechanism for deferring web page dependency requests",
+  "main": "dist/AssetLoader.min.js",
+  "keywords": [
+    "lazyload",
+    "lazy-load",
+    "lazy",
+    "performance",
+    "assets",
+    "asset-management",
+    "asset-loader",
+    "css-loader",
+    "load-css",
+    "js-loader",
+    "load-js",
+    "transitive-dependency-management"
+  ],
+  "authors": [
+    "Ethan B Martin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

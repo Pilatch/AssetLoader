@@ -1,0 +1,4 @@
+.style-target {
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
