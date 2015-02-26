@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Potent mechanism for deferring web page dependency requests",
   "main": "dist/AssetLoader.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pilatch/AssetLoader"
+  },
   "keywords": [
     "lazyload",
     "lazy-load",
