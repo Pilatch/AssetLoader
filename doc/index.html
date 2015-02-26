@@ -25,13 +25,6 @@
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
-				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="AssetLoader.html">AssetLoader</a></li>
-				</ul>
-			</li>
-			
-			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
 					<li><a href="global.html">Global</a></li>
@@ -88,7 +81,24 @@
 <p>Tracks loaded assets by asset type and identifier. A concatenated asset can be tracked as its constituent assets.</p>
 <h2>Purpose</h2><p>Reduce initial page load time by deferring requests for dependencies until they're needed.</p>
 <p>Great for lazy loading of complex or resource-intensive subsystems.</p>
-<h2>Download</h2><p><a href="/dist/AssetLoader.min.js">Production</a></p>
+<h3>Example JavaScript</h3><p>All this code could be put inside an event handler that only runs when the user performs a certain action. </p>
+<p>In this case we load some styles, an animation library, data for the animation, and a <a href="http://handlebarsjs.com/">Handlebars template</a>. When they've all been loaded, we make dancing bunnies.</p>
+<pre class="prettyprint source"><code>AssetLoader.load({
+    js: {
+        animationLib: &quot;/scripts/Ani.js&quot;,  //fictitious js library
+        bunnyData: &quot;/scripts/data/bunnies.js&quot;
+    },
+    css: {
+        &quot;bunnies|bees|flowers|trees&quot;: &quot;/min/spring.min.css&quot;,
+    },
+    hbs: {
+        springCritters: &quot;/templates/spring-critters.hbs&quot;
+    }
+}).done(function() {
+    var tpl = Handlebars.compile( $(&quot;#spring-critters-template&quot;).html() );
+    tpl(critterData.bunnies);  //render with data populated by a script we loaded, above
+    Ani.mate(&quot;bunnies&quot;);  //make 'em dance!
+});</code></pre><h2>Download</h2><p><a href="/dist/AssetLoader.min.js">Production</a></p>
 <p><a href="/src/js/AssetLoader.js">Source</a></p>
 <h2>Requires</h2><p>jQuery</p>
 <p>A browser window</p>
@@ -98,7 +108,7 @@
 <h2>Development and Documentation</h2><p>To start developing for AssetLoader, or better the documentation, run from the base folder:</p>
 <pre class="prettyprint source"><code>bower install
 npm install
-node server.js</code></pre><p>Then to view the documentation navigate to http://localhost:3000/doc in your web browser.</p>
+node server.js</code></pre><p>Then to view the documentation navigate to http://localhost:3001/doc in your web browser.</p>
 <p>To update the documentation, run from the base folder:</p>
 <pre class="prettyprint source"><code>sh/generateDocs.sh</code></pre><p>To watch for file changes that affect documentation, run from the base folder:</p>
 <pre class="prettyprint source"><code>sh/watch.sh</code></pre><p>For best compression of production code and granular test integration, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. Employees of GSI Commerce // eBay Enterprise have access to this service.</p>

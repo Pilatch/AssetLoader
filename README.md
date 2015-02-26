@@ -16,6 +16,28 @@ Reduce initial page load time by deferring requests for dependencies until they'
 
 Great for lazy loading of complex or resource-intensive subsystems.
 
+###Example JavaScript
+All this code could be put inside an event handler that only runs when the user performs a certain action. 
+
+In this case we load some styles, an animation library, data for the animation, and a [Handlebars template](http://handlebarsjs.com/). When they've all been loaded, we make dancing bunnies.
+
+    AssetLoader.load({
+        js: {
+            animationLib: "/scripts/Ani.js",  //fictitious js library
+            bunnyData: "/scripts/data/bunnies.js"
+        },
+        css: {
+            "bunnies|bees|flowers|trees": "/min/spring.min.css",
+        },
+        hbs: {
+            springCritters: "/templates/spring-critters.hbs"
+        }
+    }).done(function() {
+        var tpl = Handlebars.compile( $("#spring-critters-template").html() );
+        tpl(critterData.bunnies);  //render with data populated by a script we loaded, above
+        Ani.mate("bunnies");  //make 'em dance!
+    });
+
 ##Download
 [Production](/dist/AssetLoader.min.js)
 
@@ -40,7 +62,7 @@ To start developing for AssetLoader, or better the documentation, run from the b
     npm install
     node server.js
 
-Then to view the documentation navigate to http://localhost:3000/doc in your web browser.
+Then to view the documentation navigate to http://localhost:3001/doc in your web browser.
 
 To update the documentation, run from the base folder:
 
