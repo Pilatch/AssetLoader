@@ -81,7 +81,7 @@
 <p>Tracks loaded assets by asset type and identifier. A concatenated asset can be tracked as its constituent assets.</p>
 <h2>Purpose</h2><p>Reduce initial page load time by deferring requests for dependencies until they're needed.</p>
 <p>Great for lazy loading of complex or resource-intensive subsystems.</p>
-<h3>Example JavaScript</h3><p>All this code could be put inside an event handler that only runs when the user performs a certain action. </p>
+<h2>Example JavaScript</h2><p>All this code could be put inside an event handler that only runs when the user performs a certain action. </p>
 <p>In this case we load some styles, an animation library, data for the animation, and a <a href="http://handlebarsjs.com/">Handlebars template</a>. When they've all been loaded, we make dancing bunnies.</p>
 <pre class="prettyprint source"><code>AssetLoader.load({
     js: {
@@ -100,7 +100,7 @@
     Ani.mate(&quot;bunnies&quot;);  //make 'em dance!
 });</code></pre><h2>Download</h2><p><a href="/dist/AssetLoader.min.js">Production</a></p>
 <p><a href="/src/js/AssetLoader.js">Source</a></p>
-<h2>Requires</h2><p>jQuery</p>
+<h3>via Bower</h3><pre class="prettyprint source"><code>bower install asset-loader</code></pre><h2>Requires</h2><p>jQuery</p>
 <p>A browser window</p>
 <p>An HTML document object</p>
 <h2>Test coverage</h2><p>Tested in IE 8-11, FireFox 35, Chrome 40, Safari 8, and Opera 27.</p>

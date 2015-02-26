@@ -16,7 +16,7 @@ Reduce initial page load time by deferring requests for dependencies until they'
 
 Great for lazy loading of complex or resource-intensive subsystems.
 
-###Example JavaScript
+##Example JavaScript
 All this code could be put inside an event handler that only runs when the user performs a certain action. 
 
 In this case we load some styles, an animation library, data for the animation, and a [Handlebars template](http://handlebarsjs.com/). When they've all been loaded, we make dancing bunnies.
@@ -42,6 +42,10 @@ In this case we load some styles, an animation library, data for the animation, 
 [Production](/dist/AssetLoader.min.js)
 
 [Source](/src/js/AssetLoader.js)
+
+###via Bower
+
+    bower install asset-loader
 
 ##Requires
 jQuery
