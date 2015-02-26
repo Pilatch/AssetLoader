@@ -32,6 +32,10 @@
 	F_ATTACH_EVENT = global.attachEvent,
 	F_NOOP = $.noop,
 	F_IN_ARRAY = $.inArray,
+	F_EACH = $.each,
+	F_EXTEND = $.extend,
+	F_TRIM = $.trim,
+	F_AJAX = $.ajax,
 	//error indicators
 	E_01 = 1,
 	E_02 = 2,
@@ -58,7 +62,6 @@
 	//MINK-DELETE-START
 		//make the error indicators human readable in development mode
 		E_01 = "Could not guess asset type for path ";
-		F_ATTACH_EVENT = global.attachEvent,
 		E_02 = "Unsupported type to load ";
 		E_03 = "Unsupported asset type ";
 		E_04 = "gecko/webkit load CSS timeout reached";
@@ -123,7 +126,7 @@
 		assetServer, //akURL and whatnot, if in use
 		singlePath,
 		guessedAssetType;
-		if(typeof stuffToLoad === S_STRING) {
+		if(typeof stuffToLoad == S_STRING) {
 			singlePath = stuffToLoad;
 			if(guessedAssetType = guessAssetType(singlePath)) {
 				stuffToLoad = {};
@@ -143,18 +146,18 @@
 		function initialize() {
 			numToLoad = 0;
 			numLoaded = 0;
-			assets = $.extend(true, {}, stuffToLoad); //clone from the reference
+			assets = F_EXTEND(true, {}, stuffToLoad); //clone from the reference
 			assetServer = AssetLoaderClass.externalAssetServer; //just in case this changed somehow
 			if(assetServer && !protocolRx.test(assetServer)) {
 				assetServer = '//' + assetServer;
 			}
 			//add the assets map to the to-load-list only if there is new stuff to load
-			$.each(assets, function(type, idToPathMap){
+			F_EACH(assets, function(type, idToPathMap){
 				//count how many assets of this type need to be loaded
 				if($.isEmptyObject(idToPathMap)){ //don't bother if there's nothing of this type that's new
 					return true; //effectively a continue statement
 				}
-				$.each(idToPathMap, function(assetId, path){
+				F_EACH(idToPathMap, function(assetId, path){
 					path && path !== true && numToLoad++; //only count this as something that needs to be loaded if it's not falsey or true
 				});
 				stuffToLoad[type] = {}; //clear it out so we don't load things multiple times
@@ -246,8 +249,8 @@
 					F_TIMEOUT(allAssetsLoadedCallback, 4);
 				}
 			}
-			$.each(assets, function(type, idToPathMap) {
-				$.each(idToPathMap, function(assetId, path){
+			F_EACH(assets, function(type, idToPathMap) {
+				F_EACH(idToPathMap, function(assetId, path){
 					function loadComplete() {
 						assetLoaded(type, assetId);
 					}
@@ -278,7 +281,7 @@
 							});
 						break;
 						case 'js':
-							$.ajax({
+							F_AJAX({
 								url: path,
 								cache: true,
 								crossDomain: !!assetServer,
@@ -291,7 +294,7 @@
 							});
 						break;
 						case 'hbs':
-							$.ajax({
+							F_AJAX({
 								url: path,
 								cache: true,
 								crossDomain: !!assetServer,
@@ -376,14 +379,14 @@
 				if(pathParts && pathParts[1]) { //path is an absolute URL, because it has a protocol at the front
 					pathIsAbsolute = true;
 					pathProtocol = F_LOWERCASE(pathParts[1]);
-					if($.trim(pathProtocol) == '//') { //user means, "use whatever protocol this page uses"
+					if(F_TRIM(pathProtocol) == '//') { //user means, "use whatever protocol this page uses"
 						pathProtocol = global.location.protocol + '//';
 					}
 					pathDomain = F_LOWERCASE(pathParts[2]);
 					pathFile = pathParts[3]; //unix filenames are case sensitive
 				}
 				intervalId = F_INTERVAL(function(){
-					$.each(doc.styleSheets, function(index, styleSheet) {
+					F_EACH(doc.styleSheets, function(index, styleSheet) {
 						var cssFound = false,
 						sheetHref = styleSheet.href,
 						sheetHrefParts,
@@ -420,12 +423,12 @@
 			node.onreadystatechange = function() {
 				if(this.readyState == 'complete') {
 					try {
-						if( ! $.trim(this.styleSheet.cssText) ) {
+						if( ! F_TRIM(this.styleSheet.cssText) ) {
 							handleError(E_05);
 						}
 					}
 					catch(e) {
-						handleError(e.message);
+						handleError(e);
 					}
 					callback();
 				}
@@ -451,13 +454,13 @@
 		callbacks = {}; //in the form of assetType: { assetId: [callback1, callback2, ... ] }
 
 		function fireCallbacks(assetType, assetIdsArray) {
-			if(typeof callbacks[assetType] === "object") {
+			if(typeof callbacks[assetType] == "object") {
 				//fire callbacks that would fire regardless of which asset of this type is loaded
 				var typeSpecificCallbacks = callbacks[assetType][assetIdDelimeter] || [];
-				$.each(assetIdsArray, function(index, assetId) {
+				F_EACH(assetIdsArray, function(index, assetId) {
 					var assetSpecificCallbacks = callbacks[assetType][assetId] || [],
 					toCall = typeSpecificCallbacks.concat(assetSpecificCallbacks);
-					$.each(toCall, function() {
+					F_EACH(toCall, function() {
 						this.call(self, assetType, assetId);
 					});
 				});
@@ -495,14 +498,14 @@
 			var args = arguments,
 			containsAllThese = true; //innocent until proven guilty
 
-			if(args.length === 1 && typeof args[0] === S_STRING) { //just checking for an individual asset by its path
+			if(args.length === 1 && typeof args[0] == S_STRING) { //just checking for an individual asset by its path
 				toFind = args[0];
 				assetType = guessAssetType(toFind);
 				if(!assetType) {
 					throw E_07 + toFind;
 				}
 			}
-			if(typeof assetType === S_STRING) { //we're only interested in one type of asset
+			if(typeof assetType == S_STRING) { //we're only interested in one type of asset
 				if(!loadedAssets[assetType]) {
 					return false;
 				}
@@ -513,7 +516,7 @@
 					return !!~F_IN_ARRAY(toFind, loadedAssets[assetType]);
 				}
 				if(typeof toFind == S_OBJECT) { //we're interested in multiple assets
-					$.each(toFind, function(assetIdIndex, currentAssetId) { //loop through the array of assetIds
+					F_EACH(toFind, function(assetIdIndex, currentAssetId) { //loop through the array of assetIds
 						if(typeof currentAssetId != S_STRING) {
 							throw E_08 + args;
 						}
@@ -523,7 +526,7 @@
 				}
 			}
 			if(args.length == 1 && typeof assetType == S_OBJECT) {
-				$.each(assetType, function(currentAssetType, assetIdStringOrArray) {
+				F_EACH(assetType, function(currentAssetType, assetIdStringOrArray) {
 					return containsAllThese = self.has(currentAssetType, assetIdStringOrArray);
 				});
 				return containsAllThese;
@@ -533,7 +536,7 @@
 
 	}
 
-	$.extend(AssetLoaderClass, {
+	F_EXTEND(AssetLoaderClass, {
 		/**
 		 * Another domain that static assets should be loaded from.
 		 * <code>undefined</code> by default. 
@@ -643,7 +646,7 @@
 	 * @constructor
 	 * @param {...(AssetsObject|String)} stuffToLoad What assets you need to request.
 	 */
-	this.AssetLoader = AssetLoaderClass;
+	AssetLoader = AssetLoaderClass; //export global
 
 })(window, document, jQuery);
 
