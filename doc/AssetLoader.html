@@ -414,152 +414,7 @@ When falsey, assets will be loaded relative to the current domain.</p>
         <dl>
             
 <dt>
-    <h4 class="name" id=".guessAssetType">.guessAssetType(path)</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Guess what type of file we're dealing with.</p>
-    </div>
-    
-
-    
-
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>url or local path to the asset</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-
-    
-    
-    
-
-    
-    
-<h5>Returns: 
-<span class="param-type"><a href="global.html#SupportedAssetType">SupportedAssetType</a></span>
-
-|
-<span class="param-type">null</span>
-
-</h5>
-    <ul>
-            <li><div class="param-desc">
-    		<p><a href="global.html#SupportedAssetType">SupportedAssetType</a> when confident</p>
-	</div>
-</li>
-        
-            <li><div class="param-desc">
-    		<p>null when not confident</p>
-	</div>
-</li>
-        </ul>
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id=".hasLoaded">.hasLoaded(assetType, toFind)</h4>
+    <h4 class="name" id=".hasLoaded">.hasLoaded(assetType, <span class="optional">idsToFind</span>)</h4>
     
     
 </dt>
@@ -590,6 +445,8 @@ When falsey, assets will be loaded relative to the current domain.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -608,10 +465,10 @@ When falsey, assets will be loaded relative to the current domain.</p>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="global.html#SupportedAssetType">SupportedAssetType</a></span>
 |
 
-<span class="param-type">Array.&lt;String></span>
+<span class="param-type">Array.&lt;<a href="global.html#SupportedAssetType">SupportedAssetType</a>></span>
 |
 
 <span class="param-type">Object</span>
@@ -621,17 +478,25 @@ When falsey, assets will be loaded relative to the current domain.</p>
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>When a String: css, js, img</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>toFind</code></td>
+                <td class="name"><code>idsToFind</code></td>
             
 
             <td class="type">
@@ -647,10 +512,20 @@ When falsey, assets will be loaded relative to the current domain.</p>
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last"><p>the id(s) of the thing to check for</p></td>
+            <td class="description last"></td>
         </tr>
 
 	
@@ -718,7 +593,7 @@ When falsey, assets will be loaded relative to the current domain.</p>
     
             <div class="param-desc">
     		<ul>
-<li>whether asset(s) are loaded that match this assetId and type</li>
+<li>whether asset(s) are loaded that match the assetId(s) and type you're interested in</li>
 </ul>
 	</div>
 

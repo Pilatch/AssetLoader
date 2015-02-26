@@ -343,45 +343,59 @@ describe("AssetLoader", function() {
 			done();
 		});
 	});
-	it("guesses asset types from paths", function() {
-		var path, actual, expected;
-		path = "foo.bar.baz/fom/faddle.css";
-		expected = "css";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "/fom/faddle.css";
-		expected = "css";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "http://foo.bar.baz/fom/faddle.css";
-		expected = "css";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/FADDLE.GIF";
-		expected = "img";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/faddle.png";
-		expected = "img";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/faddle.jpeg";
-		expected = "img";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/faddle.tiff";
-		expected = "img";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/faddle.hbs";
-		expected = "hbs";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-		path = "foo.bar.baz/fom/faddle.JS";
-		expected = "js";
-		actual = AssetLoader.guessAssetType(path);
-		expect(actual).toBe(expected);
-	});
+	if(window.testExposure && testExposure.guessAssetType) {
+		it("guesses asset types from paths", function() {
+			var path, actual, expected;
+			path = "foo.bar.baz/fom/faddle.css";
+			expected = "css";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "/fom/faddle.css";
+			expected = "css";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "http://foo.bar.baz/fom/faddle.css";
+			expected = "css";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/FADDLE.GIF";
+			expected = "img";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.png";
+			expected = "img";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.jpeg";
+			expected = "img";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.tiff";
+			expected = "img";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.hbs";
+			expected = "hbs";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.JS";
+			expected = "js";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle.goyf";
+			expected = "goyf";
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle"
+			expected = null;
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+			path = "foo.bar.baz/fom/faddle."
+			expected = null;
+			actual = testExposure.guessAssetType(path);
+			expect(actual).toBe(expected);
+		});
+	}
 	it("can load based on an AssetsObject or a single path", function(done) {
 		function loadedCallback() {
 			loadedCallback.numTimesCalled++;
@@ -487,7 +501,7 @@ describe("AssetLoader", function() {
 		shouldNotBeCalled.numTimesCalled = 0;
 		AssetLoader(assetsObj).done(shouldNotBeCalled).done(afterDone).each(shouldNotBeCalled).each(afterEach).error(onError);
 	});
-	it("can check if an assets was loaded just based on path", function(done) {
+	it("can check if an asset was loaded just based on path", function(done) {
 		var path = "/tst/css/dotted-border.css";
 		function expectations() {
 			expect($(".style-target").css("border-top-style")).toBe("dotted");
@@ -527,7 +541,7 @@ describe("AssetLoader", function() {
 			done();
 		});
 	});
-	it("pulls in external assets, bootstrap in this case, and handles cross-origin error", function(done) {
+	it("pulls in external assets, bootstrap in this case, and handles domain resolution error", function(done) {
 		var assetsObj = {
 			css: {
 				bootstrap: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
@@ -576,6 +590,13 @@ describe("AssetLoader", function() {
 			expect( dogDescImg.css("border-top-width") ).toBe("2px");
 			done();
 		});
+	});
+	it("throws an exception trying to load an asset of unknown type", function() {
+		var path = "/path/to/unknown.goyf",
+		message = window.testExposure ? "Unsupported asset type goyf" : "3goyf";
+		expect( function(){
+			new AssetLoader(path);
+		} ).toThrow(message);
 	});
 	//TODO handle javascript syntax errors better
 });

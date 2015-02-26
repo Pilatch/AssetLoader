@@ -37,7 +37,6 @@
 	F_TRIM = $.trim,
 	F_AJAX = $.ajax,
 	//error indicators
-	E_01 = 1,
 	E_02 = 2,
 	E_03 = 3,
 	E_04 = 4,
@@ -61,7 +60,6 @@
 
 	//MINK-DELETE-START
 		//make the error indicators human readable in development mode
-		E_01 = "Could not guess asset type for path ";
 		E_02 = "Unsupported type to load ";
 		E_03 = "Unsupported asset type ";
 		E_04 = "gecko/webkit load CSS timeout reached";
@@ -71,6 +69,7 @@
 		E_08 = "Unsupported argument structure ";
 		//expose internals for testing
 		global.testExposure = {
+			guessAssetType: guessAssetType,
 			domainRx: domainRx,
 			protocolRx: protocolRx
 		};
@@ -128,14 +127,10 @@
 		guessedAssetType;
 		if(typeof stuffToLoad == S_STRING) {
 			singlePath = stuffToLoad;
-			if(guessedAssetType = guessAssetType(singlePath)) {
-				stuffToLoad = {};
-				stuffToLoad[guessedAssetType] = {};
-				stuffToLoad[guessedAssetType][singlePath] = singlePath;
-			}
-			else {
-				throw E_01 + singlePath;
-			}
+			guessedAssetType = guessAssetType(singlePath)
+			stuffToLoad = {};
+			stuffToLoad[guessedAssetType] = {};
+			stuffToLoad[guessedAssetType][singlePath] = singlePath;
 		}
 		else if( !$.isPlainObject(stuffToLoad) ) {
 			throw E_02 + stuffToLoad;
@@ -563,16 +558,6 @@
 		 */
 		on: loadedAssets.on,
 		/**
-		 * Guess what type of file we're dealing with.
-		 * @static
-		 * @memberOf AssetLoader
-		 * @function
-		 * @param  {String} path url or local path to the asset
-		 * @return {SupportedAssetType}	{@link SupportedAssetType} when confident
-		 * @return {null} null when not confident
-		 */
-		guessAssetType: guessAssetType,
-		/**
 		 * Determine whether a specific asset has already been loaded. Has multiple parameter structures for convenience.
 		 * @example
 		 * <caption>Determine if the styles for the overlay were loaded.</caption>
@@ -596,9 +581,9 @@
 		 * @memberOf AssetLoader
 		 * @function
 		 * @static
-		 * @param {String|String[]|Object} assetType When a String: css, js, img
-		 * @param {String|String[]} toFind the id(s) of the thing to check for
-		 * @return {boolean} - whether asset(s) are loaded that match this assetId and type
+		 * @param {SupportedAssetType|SupportedAssetType[]|Object} assetType
+		 * @param {String|String[]} [idsToFind]
+		 * @return {boolean} - whether asset(s) are loaded that match the assetId(s) and type you're interested in
 		 */
 		hasLoaded: loadedAssets.has,
 		/**
@@ -644,6 +629,7 @@
 	 *   DialogTemplateRenderer.render(talkybox);
 	 * });
 	 * @constructor
+	 * @name AssetLoader
 	 * @param {...(AssetsObject|String)} stuffToLoad What assets you need to request.
 	 */
 	AssetLoader = AssetLoaderClass; //export global
@@ -686,12 +672,20 @@
  */
 
 /**
- * A plain object that is a map of asset IDs to their respective web paths.
- * Contains only one type of asset, whether stylesheets or images, etc.
  * @example
+ * <caption>A plain object that is a map of asset IDs to their respective web paths.
+ * Contains only one type of asset, whether stylesheets or images, etc.</caption>
  * {
  * 	"overlay": "/css/gray-overlay.css",
  * 	"dialogBox": "/css/schnazzy-dialog.css"
+ * }
+ *
+ * @example
+ * <caption>With concatenated assets (common for js and css) the sub-assets
+ * should have their asset IDs separated by pipes (<code>|</code>).
+ * This lets the AssetLoader track that both of these assets have been loaded.</caption>
+ * {
+ * 	"overlay|dialogBox": "/min/popup.min.css"
  * }
  * @typedef {Object} AssetIdPathMap
  */
