@@ -1,6 +1,6 @@
 {
   "name": "asset-loader",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "description": "Potent mechanism for deferring web page dependency requests",
   "main": "dist/AssetLoader.min.js",
   "keywords": [
@@ -25,7 +25,6 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "tst"
   ]
 }

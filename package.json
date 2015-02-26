@@ -1,5 +1,4 @@
 {
-  "version": "0.9.0",
   "description": "Potent mechanism for deferring web page dependency requests",
   "devDependencies": {
     "jsdoc": "~3.3.0-alpha5",
@@ -10,5 +9,9 @@
     "ink-docstrap": "git+https://github.com/Pilatch/docstrap.git"
   },
   "author": "Ethan B Martin",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pilatch/AssetLoader"
+  }
 }
