@@ -1,5 +1,7 @@
 #AssetLoader
 
+Potent mechanism for deferring web page dependency requests
+
 ##Description
 JavaScript for HTML web pages.
 
