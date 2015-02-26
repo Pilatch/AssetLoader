@@ -1,7 +1,37 @@
-# AssetLoader
+#AssetLoader
 
-## Use
-To use the production version of the AssetLoader, find dist/AssetLoader.min.js
+##Description
+JavaScript for HTML web pages.
+
+Manages asynchronous and transitive dependency loading, with custom callbacks and error handling.
+
+Fires callbacks you specify through a promise interface.
+
+Can load transitive dependencies in order, or a group of dependencies at once, or a single path. Allows JavaScript to add more dependencies at run time.
+
+Tracks loaded assets by asset type and identifier. A concatenated asset can be tracked as its constituent assets.
+
+##Purpose
+Reduce initial page load time by deferring requests for dependencies until they're needed.
+
+Great for lazy loading of complex or resource-intensive subsystems.
+
+##Download
+[Production](/dist/AssetLoader.min.js)
+
+[Source](/src/js/AssetLoader.js)
+
+##Requires
+jQuery
+
+A browser window
+
+An HTML document object
+
+##Test coverage
+Tested in IE 8-11, FireFox 35, Chrome 40, Safari 8, and Opera 27.
+
+Subjected to [a battery of Jasmine tests](/tst/run.jade).
 
 ## Development and Documentation
 To start developing for AssetLoader, or better the documentation, run from the base folder:
@@ -10,10 +40,23 @@ To start developing for AssetLoader, or better the documentation, run from the b
     npm install
     node server.js
 
-To view the documentation navigate to http://localhost:3000/doc in your web browser.
+Then to view the documentation navigate to http://localhost:3000/doc in your web browser.
 
 To update the documentation, run from the base folder:
 
     sh/generateDocs.sh
 
-For best compression of production code, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. Employees of GSI Commerce // eBay Enterprise have access to this service.
+To watch for file changes that affect documentation, run from the base folder:
+
+    sh/watch.sh
+
+For best compression of production code and granular test integration, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. Employees of GSI Commerce // eBay Enterprise have access to this service.
+
+##History
+Originally an internal of the ISPU JavaScript for Ace Hardware to minimally impact product page performance.
+Deferred loading all the dependencies of the Store Selector until the user elected to search for nearby storefronts.
+
+##Author
+Ethan B Martin
+
+GSI Commerce // eBay Enterprise

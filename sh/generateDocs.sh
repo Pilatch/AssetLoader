@@ -4,4 +4,4 @@ nodejs node_modules/jsdoc/jsdoc.js \
 	--destination doc \
 	--template node_modules/ink-docstrap/template/ \
 	--configure conf/jsdoc.conf.json \
-	src/js/AssetLoader.js src/README.md
+	src/js/AssetLoader.js README.md
