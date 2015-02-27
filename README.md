@@ -66,9 +66,9 @@ To start developing for AssetLoader, or better the documentation, run from the b
 
     bower install
     npm install
-    node server.js
+    node server.js 3001
 
-Then to view the documentation navigate to http://localhost:3001/doc in your web browser.
+Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser.
 
 To update the documentation, run from the base folder:
 
@@ -78,7 +78,11 @@ To watch for file changes that affect documentation, run from the base folder:
 
     sh/watch.sh
 
-For best compression of production code and granular test integration, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. Employees of GSI Commerce // eBay Enterprise have access to this service.
+###Generating a Distribution
+
+For best compression of production code and granular test integration, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. 
+
+Employees of GSI Commerce // eBay Enterprise have access to a Mink service. Not an employee, but still want to contribute? Make a pull request with your source changes, and I'll prepare it for production.
 
 ##History
 Originally an internal of the ISPU JavaScript for Ace Hardware to minimally impact product page performance.
