@@ -57,7 +57,7 @@ A browser window
 An HTML document object
 
 ##Test coverage
-Tested in IE 8-11, FireFox 35, Chrome 40, Safari 8, and Opera 27.
+Tested in IE 8-11, FireFox 35 and 36 Chrome 40, Safari 8, and Opera 27.
 
 Subjected to [a battery of Jasmine tests](/tst/run.jade).
 
