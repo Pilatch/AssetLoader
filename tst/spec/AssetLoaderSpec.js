@@ -18,6 +18,11 @@ function verbalize() {
 		console.log.apply( console, Array.prototype.slice.call(arguments, 0) );
 	}
 }
+beforeAll(function() {
+	if( !$(".style-target")[0] ) {
+		$('body').append('<div class="style-target">'); //we don't do this in html because karma makes that hard
+	}
+});
 beforeEach(function () {
 	jasmine.addMatchers({
 		toDetermineProtocol: function(util, customEqualityTesters) {

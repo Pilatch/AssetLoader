@@ -21,8 +21,17 @@ gulp.task("server", shell.task([
   node + " server.js --port=" + (args.port || 3001)
 ]))
 
+gulp.task("karma", shell.task([
+  "karma start conf/karma.conf.js"
+], {
+  ignoreErrors: true
+}))
+
 gulp.task("watch", function() {
   watch(["src/**", "README.md", "conf/jsdoc.conf.json"], function() {
     gulp.start("doc")
+  })
+  watch(["src/**", "tst/**", "conf/karma.conf.js"], function() {
+    gulp.start("karma")
   })
 })

@@ -1,4 +1,4 @@
 <scripts>
-	<src>//code.jquery.com/jquery-1.11.2.min.js</src>
+	<src>tst/lib/jquery-1.11.2.min.js</src>
 	<src>src/js/AssetLoader.js</src>
 </scripts>
