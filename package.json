@@ -1,12 +1,16 @@
 {
   "description": "Potent mechanism for deferring web page dependency requests",
   "devDependencies": {
-    "jsdoc": "~3.3.0-alpha5",
+    "express": "~4.11.2",
+    "gulp": "^3.8.11",
+    "gulp-shell": "^0.3.0",
+    "gulp-watch": "^4.1.1",
+    "ink-docstrap": "git+https://github.com/Pilatch/docstrap.git",
     "jade": "~1.9.2",
     "jade-static": "~1.1.1",
-    "express": "~4.11.2",
+    "jsdoc": "~3.3.0-alpha5",
     "nodemon": "~1.3.7",
-    "ink-docstrap": "git+https://github.com/Pilatch/docstrap.git"
+    "yargs": "^3.4.5"
   },
   "author": "Ethan B Martin",
   "license": "MIT",

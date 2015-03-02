@@ -62,21 +62,13 @@ Tested in IE 8-11, FireFox 35 and 36 Chrome 40, Safari 8, and Opera 27.
 Subjected to [a battery of Jasmine tests](/tst/run.jade).
 
 ## Development and Documentation
-To start developing for AssetLoader, or better the documentation, run from the base folder:
+To start developing for AssetLoader or better the documentation you need [node](http://nodejs.org/) with [npm](https://www.npmjs.com/) and [gulp](http://gulpjs.com/), and [bower](http://bower.io/). Then run from the base folder:
 
-    bower install
     npm install
-    node server.js 3001
+    bower install
+    gulp --port=3001
 
-Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser.
-
-To update the documentation, run from the base folder:
-
-    sh/generateDocs.sh
-
-To watch for file changes that affect documentation, run from the base folder:
-
-    sh/watch.sh
+Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser. Gulp will watch for changes and regenerate the documentation.
 
 ###Generating a Distribution
 
