@@ -37,7 +37,7 @@ webAppRoot='..' # (required)
  # It's not necessarily visible to external requests.
  # Asset paths starting with a slash character are considered relative to the webAppRoot.
  # Depending on your platform, those assets might only be visible through a web alias.
-webAppRootDirName='al' # (required)
+webAppRootDirName='AssetLoader' # (required)
  # Your web application looks for assets starting in a folder by this name.
  # Needed for error checking and path manipulation.
 platform='' # (optional)
