@@ -116,7 +116,7 @@
 <h2>Development and Documentation</h2><p>To start developing for AssetLoader or better the documentation you need <a href="http://nodejs.org/">node</a> with <a href="https://www.npmjs.com/">npm</a> and <a href="http://gulpjs.com/">gulp</a>, and <a href="http://bower.io/">bower</a>. Then run from the base folder:</p>
 <pre class="prettyprint source"><code>npm install
 bower install
-gulp --port=3001</code></pre><p>Then to view the documentation navigate to <a href="http://localhost:3001/doc">http://localhost:3001/doc</a> in your web browser. Gulp will watch for changes and regenerate the documentation.</p>
+gulp --port=3001</code></pre><p>Then to view the documentation navigate to <a href="http://localhost:3001/doc">http://localhost:3001/doc</a> in your web browser. Gulp will watch for changes and regenerate the documentation. If you edit a source file, or something in the tests directory karma will try to spawn a bunch of browsers and run the tests in each of them. Watch your terminal for the results.</p>
 <h3>Generating a Distribution</h3><p>For best compression of production code and granular test integration, AssetLoader is built with Mink. At this time there is not yet a public Mink service in operation. That may change in the future. </p>
 <p>Employees of GSI Commerce // eBay Enterprise have access to a Mink service. Not an employee, but still want to contribute? Make a pull request with your source changes, and I'll prepare it for production.</p>
 <h2>History</h2><p>Originally an internal of the ISPU JavaScript for Ace Hardware to minimally impact product page performance.
