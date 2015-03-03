@@ -49,6 +49,12 @@ In this case we load some styles, an animation library, data for the animation, 
 
     bower install asset-loader
 
+####is github not resolving?
+
+That's probably because you're behind a firewall. Tell git to use https instead of the git protocol, which may be blocked
+
+    git config --global url."https://".insteadOf git://
+
 ##Requires
 jQuery
 
@@ -62,7 +68,7 @@ Tested in IE 8-11, FireFox 35 and 36 Chrome 40, Safari 8, and Opera 27.
 Subjected to [a battery of Jasmine tests](/tst/run.jade).
 
 ## Development and Documentation
-To start developing for AssetLoader or better the documentation you need [node](http://nodejs.org/) with [npm](https://www.npmjs.com/) and [gulp](http://gulpjs.com/), and [bower](http://bower.io/). Then run from the base folder:
+To start developing for AssetLoader or better the documentation you need [node](http://nodejs.org/), [git](http://git-scm.com/), [gulp](http://gulpjs.com/), and [bower](http://bower.io/). Then run from the base folder:
 
     npm install
     bower install
