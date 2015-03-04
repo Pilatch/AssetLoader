@@ -31,7 +31,6 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "tst"
+    "bower_components"
   ]
 }

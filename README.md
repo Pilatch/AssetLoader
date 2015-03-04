@@ -67,12 +67,16 @@ Tested in IE 8-11, FireFox 35 and 36 Chrome 40, Safari 8, and Opera 27.
 
 Subjected to [a battery of Jasmine tests](/tst/run.jade).
 
-## Development and Documentation
+##Development and Documentation
 To start developing for AssetLoader or better the documentation you need [node](http://nodejs.org/), [git](http://git-scm.com/), [gulp](http://gulpjs.com/), and [bower](http://bower.io/). Then run from the base folder:
 
     npm install
     bower install
     gulp --port=3001
+
+###on Windows
+
+Don't use Cygwin. We recommend PowerShell instead. At the time this is written, there is a bug preventing npm from installing GitHub dependencies on Cygwin.
 
 Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser. Gulp will watch for changes and regenerate the documentation. If you edit a source file, or something in the tests directory karma will try to spawn a bunch of browsers and run the tests in each of them. Watch your terminal for the results.
 

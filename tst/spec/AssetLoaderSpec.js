@@ -418,7 +418,7 @@ describe("AssetLoader", function() {
 		}).done(loadedCallback);
 		var path = "/tst/css/font-size.css";
 		AssetLoader.load(path).done(function() {
-			expect(["Arial, sans-serif", "Arial,sans-serif"]).toContain( $(".style-target").css("font-family") );
+			expect(["Arial", "Arial, sans-serif", "Arial,sans-serif"]).toContain( $(".style-target").css("font-family") );
 			expect( $(".style-target").css("font-size") ).toBe("32px");
 			expect( AssetLoader.hasLoaded("css", path) ).toBe(true);
 			expect(loadedCallback.numTimesCalled).toBeLessThan(2);
@@ -568,10 +568,11 @@ describe("AssetLoader", function() {
 		}
 		handleError.numTimesCalled = 0;
 		expect( h2.css("font-family").toLowerCase().indexOf("helvetica neue") ).toBe(-1);
+		expect( h2.css("margin-bottom") ).not.toBe("10px");
 		AssetLoader.load(assetsObj).each(afterEach).error(handleError).done(function() {
 			expect(afterEach.numTimesCalled).toBe(2);
 			expect(handleError.numTimesCalled).toBe(1);
-			expect( h2.css("font-family").toLowerCase().indexOf("helvetica neue") ).not.toBe(-1);
+			expect( h2.css("margin-bottom") ).toBe("10px");
 			done();
 		});
 	});
