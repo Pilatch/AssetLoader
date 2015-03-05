@@ -36,8 +36,8 @@ gulp.task("karma", function(karmaDone) {
     }, karmaDone)
   }
   exe("karma start " + fullConfigPath, function(error, stdout, stderr) {
-    console.warn(clc.yellow("Install karma-cli to improve this experience:"), "npm install -g karma-cli")
     if(error && !stdout) {
+      console.warn(clc.yellow("Install karma-cli to improve this experience:"), "npm install -g karma-cli")
       callKarmaServer()
     }
     else {
