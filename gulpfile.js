@@ -5,6 +5,8 @@ var args = require("yargs").argv
 var node = "node" //could be "nodejs" if not "node"
 var karma = require("karma")
 var path = require("path")
+var exe = require("child_process").exec
+var clc = require("cli-color")
 
 gulp.task("default", function(){
   gulp.start("watch")
@@ -23,12 +25,27 @@ gulp.task("server", shell.task([
   node + " server.js --port=" + (args.port || 3001)
 ]))
 
-gulp.task("karma", function(cb) {
+//we try to use the karma-cli binary if it's on the path
+//should that fail, we call karma from node
+gulp.task("karma", function(karmaDone) {
   var fullConfigPath = path.join(process.cwd(), "conf/karma.conf.js")
-  karma.server.start({
-    configFile: fullConfigPath,
-    singleRun: true
-  }, cb);
+  function callKarmaServer() {
+    karma.server.start({
+      configFile: fullConfigPath,
+      singleRun: true
+    }, karmaDone)
+  }
+  exe("karma start " + fullConfigPath, function(error, stdout, stderr) {
+    console.warn(clc.yellow("Install karma-cli to improve this experience:"), "npm install -g karma-cli")
+    if(error && !stdout) {
+      callKarmaServer()
+    }
+    else {
+      console.error(stderr)
+      console.log(stdout)
+      karmaDone()
+    }
+  })
 })
 
 gulp.task("watch", function() {

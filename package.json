@@ -1,6 +1,7 @@
 {
   "description": "Potent mechanism for deferring web page dependency requests",
   "devDependencies": {
+    "cli-color": "^0.3.2",
     "express": "~4.11.2",
     "gulp": "^3.8.11",
     "gulp-shell": "^0.3.0",
