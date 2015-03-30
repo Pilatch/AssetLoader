@@ -74,11 +74,11 @@ To start developing for AssetLoader or better the documentation you need [node](
     bower install
     gulp --port=3001
 
+Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser. Gulp will watch for changes and regenerate the documentation. If you edit a source file, or something in the tests directory karma will try to spawn a bunch of browsers and run the tests in each of them. Watch your terminal for the results.
+
 ###on Windows
 
 Don't use Cygwin. We recommend PowerShell instead. At the time this is written, there is a bug preventing npm from installing GitHub dependencies on Cygwin.
-
-Then to view the documentation navigate to [http://localhost:3001/doc](http://localhost:3001/doc) in your web browser. Gulp will watch for changes and regenerate the documentation. If you edit a source file, or something in the tests directory karma will try to spawn a bunch of browsers and run the tests in each of them. Watch your terminal for the results.
 
 ###Generating a Distribution
 
