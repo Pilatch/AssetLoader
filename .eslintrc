@@ -1,0 +1,63 @@
+//Style guide basis:
+//1. Don't repeat yourself. (DRY)
+//  a. Eliminate unnecessary control structures.
+//  b. Encourage fewer keystrokes to write new code.
+//2. Readability
+//  a. Reduce clutter.
+//  b. Keep files small both horizontally and vertically.
+//3. Reflect how ECMAScript is interpreted.
+//  a. Prevent manifestation of footguns.
+//  b. Teach developers best practices.
+//4. Consistency
+//  a. Make seaching through source code and/or documentation more deterministic.
+//  b. Make code diffs smaller.
+//5. Legacy support
+//  a. Support IE 8 running in IE 7 mode. :(
+//  b. Don't force developers to completely overhaul functionality.
+{
+  "env": {
+    "browser": true //We usually code for browsers.
+  },
+  "rules": {
+    "brace-style": [2, "1tbs"], //Readability.
+    "camelcase": 1, //Fewer keystrokes. Prefer camelCaseVarNames instead of underscored_var_names.
+    "comma-dangle": [2, "never"], //Support IE8 in IE7-mode. :(
+    "complexity": [1, 8], //Warn you to break up complex functions
+    "curly": [2, "multi-line"], //You can follow an if/else condition with a one-liner.
+    "eqeqeq": 1, //Prefer === but developers should know how === differs from == because they're both useful.
+    "indent": [2, 2], //Indents are two spaces. Make your IDE do it for you.
+    "newline-after-var": [2, "always"], //We want a newline here to help differentiate when the vars stop, and logic begins.
+    "no-alert": 1, //Legacy support.
+    "no-else-return": 1, //Unnecessary control structure.
+    "no-eval": 2, //Affects compression. Invites bugs. Historically a security concern. Footgun. There are better ways.
+    "no-extra-semi": 0, //A semicolon preceeding an immediately executing function is a good thing.
+    "no-implied-eval": 2, //See "no-eval".
+    "no-lonely-if": 2, //Unnecessary control structure.
+    "no-multiple-empty-lines": [2, {"max": 1}], //Makes files larger unnecessarily.
+    "no-nested-ternary": 2, //Readability.
+    "no-return-assign": 0, //Allowed because it means fewer keystrokes, reflects how the language works, but is still readable.
+    "no-undefined": 2, //We still support IE8. Reflect how ECMAScript actually works.
+    "no-unused-vars": [2, {
+        "vars": "local" //We need to do strange juggling between server-side logic and front-end logic sometimes.
+    }],
+    "no-warning-comments": [1, { //Reminder to deal with outstanding issues.
+        "terms": ["todo", "fixme", "xxx"],
+        "location": "start"
+    }],
+    "quotes": [2, "double", "avoid-escape"], //Consistency. Avoid escape for readability.
+    "semi": [2, "never"], //Fewer characters, reflect how ECMAScript actually works, and consistency.
+    "semi-spacing": 0, //For when we actually do need a semicolon, e.g. before a line beginning with an operator.
+    "space-after-keywords": 2, //Readability. Consistency.
+    "space-before-blocks": 2, //Readability. Consistency.
+    "space-before-function-paren": [2, { //Readability. Consistency.
+        "anonymous": "always",
+        "named": "never"
+    }],
+    "space-infix-ops": 2, //Readability. Consistency.
+    "space-return-throw-case": 2, //Readability.
+    "strict": [1, "function"], //Reflect how ECMAScript actually works. And we concatenate, so global "use strict" would be problematic.
+    "valid-jsdoc": 1, //Consistency. Initial value. May be tightened later.
+    "vars-on-top": 2, //Reflect how ECMAScript actually works.
+    "yoda": 1, //Readability. Consistency.
+  }
+}
